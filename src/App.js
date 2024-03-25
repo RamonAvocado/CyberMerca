@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+async function buscar() {
+  var searchTerm = document.getElementById('searchInput').value;
+
+  // Realizar una solicitud POST al backend con la información de búsqueda
+  try {
+      const response = await fetch('http://localhost:5169/producto', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ searchTerm: searchTerm }),
+      });
+
+      if (response.ok) {
+          const data = await response.json();
+          mostrarResultado(data.resultado);  // Llama a una función para mostrar el resultado en la página
+      } else {
+          console.error('Error en la solicitud al backend:', response.statusText);
+      }
+  } catch (error) {
+      console.error('Error inesperado:', error);
+  }
 }
 
-export default App;
+// Función para mostrar el resultado en la página
+function mostrarResultado(resultado) {
+  var resultadosDiv = document.getElementById('resultados');
+  resultadosDiv.innerHTML = `<p>Resultado: ${resultado}</p>`;
+}
+
